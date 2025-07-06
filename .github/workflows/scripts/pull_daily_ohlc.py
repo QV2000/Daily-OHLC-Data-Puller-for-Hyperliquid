@@ -93,7 +93,8 @@ class HyperliquidDailyOHLC:
         current_time = datetime.now(pytz.UTC)
         
         # Check if we have existing data for this asset
-        asset_file = os.path.join(self.data_dir, f"{asset}_daily.csv")
+        safe_asset_name = self.sanitize_filename(asset)
+        asset_file = os.path.join(self.data_dir, f"{safe_asset_name}_daily.csv")
         
         if self.full_historical or not os.path.exists(asset_file):
             # Pull maximum historical data (start from 2 years ago)
@@ -165,13 +166,23 @@ class HyperliquidDailyOHLC:
             print(f"Error processing data for {asset}: {e}")
             return pd.DataFrame()
 
+    def sanitize_filename(self, asset: str) -> str:
+        """Sanitize asset name for filename (replace invalid characters)"""
+        # Replace any characters that might cause issues in filenames
+        sanitized = asset.replace("/", "_").replace("\\", "_").replace(":", "_")
+        sanitized = sanitized.replace("<", "_").replace(">", "_").replace("|", "_")
+        sanitized = sanitized.replace("?", "_").replace("*", "_").replace('"', "_")
+        return sanitized
+
     def save_asset_data(self, df: pd.DataFrame, asset: str):
         """Save or update asset data"""
         if df.empty:
             print(f"No data to save for {asset}")
             return
         
-        asset_file = os.path.join(self.data_dir, f"{asset}_daily.csv")
+        # Sanitize the asset name for filename
+        safe_asset_name = self.sanitize_filename(asset)
+        asset_file = os.path.join(self.data_dir, f"{safe_asset_name}_daily.csv")
         
         try:
             if os.path.exists(asset_file) and not self.full_historical:
@@ -186,11 +197,11 @@ class HyperliquidDailyOHLC:
                 
                 # Save combined data
                 combined_df.to_csv(asset_file, index=False)
-                print(f"Updated {asset} data: {len(df)} new rows, {len(combined_df)} total rows")
+                print(f"Updated {asset} ({safe_asset_name}) data: {len(df)} new rows, {len(combined_df)} total rows")
             else:
                 # Save new data
                 df.to_csv(asset_file, index=False)
-                print(f"Saved {asset} data: {len(df)} rows")
+                print(f"Saved {asset} ({safe_asset_name}) data: {len(df)} rows")
                 
         except Exception as e:
             print(f"Error saving data for {asset}: {e}")
