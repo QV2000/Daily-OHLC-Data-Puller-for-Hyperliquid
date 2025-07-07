@@ -63,35 +63,50 @@ class HyperliquidDailyOHLC:
             return []
 
     def get_historical_ohlc(self, asset: str, start_time: int, end_time: int) -> List[Dict]:
-        """Get historical OHLC data for a specific asset"""
-        try:
-            payload = {
-                "type": "candleSnapshot",
-                "req": {
-                    "coin": asset,
-                    "interval": "1d",
-                    "startTime": start_time,
-                    "endTime": end_time
+        """Get historical OHLC data for a specific asset with retry logic"""
+        max_retries = 3
+        retry_delay = 1
+        
+        for attempt in range(max_retries):
+            try:
+                payload = {
+                    "type": "candleSnapshot",
+                    "req": {
+                        "coin": asset,
+                        "interval": "1d",
+                        "startTime": start_time,
+                        "endTime": end_time
+                    }
                 }
-            }
-            
-            response = self.session.post(
-                self.base_url,
-                json=payload,
-                timeout=30
-            )
-            response.raise_for_status()
-            data = response.json()
-            
-            if isinstance(data, list) and len(data) > 0:
-                return data
-            else:
-                print(f"No data returned for {asset}")
-                return []
                 
-        except Exception as e:
-            print(f"Error fetching OHLC data for {asset}: {e}")
-            return []
+                response = self.session.post(
+                    self.base_url,
+                    json=payload,
+                    timeout=30
+                )
+                response.raise_for_status()
+                data = response.json()
+                
+                if isinstance(data, list) and len(data) > 0:
+                    return data
+                else:
+                    print(f"No data returned for {asset}")
+                    return []
+                    
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 500 and attempt < max_retries - 1:
+                    print(f"Server error for {asset}, retrying in {retry_delay}s (attempt {attempt + 1}/{max_retries})")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    continue
+                else:
+                    print(f"HTTP Error fetching OHLC data for {asset}: {e}")
+                    return []
+            except Exception as e:
+                print(f"Error fetching OHLC data for {asset}: {e}")
+                return []
+        
+        return []
 
     def calculate_time_range(self, asset: str) -> tuple:
         """Calculate the time range for data fetching"""
@@ -218,30 +233,39 @@ class HyperliquidDailyOHLC:
                 existing_df = pd.read_csv(asset_file)
                 existing_df['timestamp'] = pd.to_datetime(existing_df['timestamp'])
                 
-                # When combining data, we need to recalculate Donchian channels for the entire dataset
-                # to ensure the rolling calculations are correct
+                # Combine and remove duplicates
                 combined_df = pd.concat([existing_df, df], ignore_index=True)
                 combined_df = combined_df.drop_duplicates(subset=['timestamp'], keep='last')
                 combined_df = combined_df.sort_values('timestamp')
                 
-                # Drop existing Donchian columns if they exist
-                donchian_cols = [col for col in combined_df.columns if col.startswith('donchian_')]
-                if donchian_cols:
-                    combined_df = combined_df.drop(columns=donchian_cols)
-                
-                # Recalculate Donchian channels for the entire dataset
-                combined_df = self.calculate_donchian_channels(combined_df)
+                # Recalculate Donchian channels for the entire combined dataset
+                # (This ensures rolling calculations are correct across the full history)
+                combined_df = self.recalculate_donchian_for_existing(combined_df)
                 
                 # Save combined data
                 combined_df.to_csv(asset_file, index=False)
                 print(f"Updated {asset} data: {len(df)} new rows, {len(combined_df)} total rows")
             else:
-                # Save new data
+                # Save new data (already has Donchian channels calculated)
                 df.to_csv(asset_file, index=False)
                 print(f"Saved {asset} data: {len(df)} rows")
                 
         except Exception as e:
             print(f"Error saving data for {asset}: {e}")
+
+    def recalculate_donchian_for_existing(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Recalculate Donchian channels for existing data that might not have them"""
+        try:
+            # Remove any existing Donchian columns
+            donchian_cols = [col for col in df.columns if col.startswith('donchian_')]
+            if donchian_cols:
+                df = df.drop(columns=donchian_cols)
+            
+            # Recalculate all Donchian channels
+            return self.calculate_donchian_channels(df)
+        except Exception as e:
+            print(f"Error recalculating Donchian channels: {e}")
+            return df
 
     def update_assets_list(self, assets: List[str]):
         """Update the assets list file"""
@@ -321,8 +345,8 @@ class HyperliquidDailyOHLC:
                     print(f"No data available for {asset}")
                     failed_assets.append(asset)
                 
-                # Rate limiting - small delay between requests
-                time.sleep(0.1)
+                # Rate limiting - increased delay between requests due to API errors
+                time.sleep(0.5)
                 
             except Exception as e:
                 print(f"Error processing {asset}: {e}")
