@@ -2,6 +2,7 @@
 """
 Daily OHLC Data Puller for Hyperliquid
 Pulls daily OHLC data for all assets, handles initial historical data and daily updates.
+Includes Donchian Channel calculations for multiple periods.
 """
 
 import requests
@@ -20,6 +21,9 @@ class HyperliquidDailyOHLC:
         self.assets_file = os.path.join(self.data_dir, "assets.json")
         self.session = requests.Session()
         
+        # Donchian channel periods
+        self.donchian_periods = [5, 10, 20, 30, 60, 90, 150, 250, 360]
+        
         # Ensure data directory exists
         os.makedirs(self.data_dir, exist_ok=True)
         
@@ -31,6 +35,7 @@ class HyperliquidDailyOHLC:
         print(f"Initialized HyperliquidDailyOHLC")
         print(f"Full historical: {self.full_historical}")
         print(f"Days back: {self.days_back}")
+        print(f"Donchian periods: {self.donchian_periods}")
 
     def get_all_assets(self) -> List[str]:
         """Get all available assets from Hyperliquid"""
@@ -93,8 +98,7 @@ class HyperliquidDailyOHLC:
         current_time = datetime.now(pytz.UTC)
         
         # Check if we have existing data for this asset
-        safe_asset_name = self.sanitize_filename(asset)
-        asset_file = os.path.join(self.data_dir, f"{safe_asset_name}_daily.csv")
+        asset_file = os.path.join(self.data_dir, f"{asset}_daily.csv")
         
         if self.full_historical or not os.path.exists(asset_file):
             # Pull maximum historical data (start from 2 years ago)
@@ -121,8 +125,39 @@ class HyperliquidDailyOHLC:
         
         return int(start_time.timestamp() * 1000), int(end_time.timestamp() * 1000)
 
+    def calculate_donchian_channels(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Calculate Donchian channels for multiple periods"""
+        if df.empty:
+            return df
+        
+        try:
+            for period in self.donchian_periods:
+                # Donchian Channel High (highest high over period)
+                df[f'donchian_high_{period}'] = df['high'].rolling(
+                    window=period, 
+                    min_periods=period
+                ).max()
+                
+                # Donchian Channel Low (lowest low over period)
+                df[f'donchian_low_{period}'] = df['low'].rolling(
+                    window=period, 
+                    min_periods=period
+                ).min()
+                
+                # Donchian Channel Mid (average of high and low)
+                df[f'donchian_mid_{period}'] = (
+                    df[f'donchian_high_{period}'] + df[f'donchian_low_{period}']
+                ) / 2
+            
+            print(f"Calculated Donchian channels for periods: {self.donchian_periods}")
+            return df
+            
+        except Exception as e:
+            print(f"Error calculating Donchian channels: {e}")
+            return df
+
     def process_ohlc_data(self, raw_data: List[Dict], asset: str) -> pd.DataFrame:
-        """Process raw OHLC data into a DataFrame"""
+        """Process raw OHLC data into a DataFrame with Donchian channels"""
         if not raw_data:
             return pd.DataFrame()
         
@@ -160,19 +195,14 @@ class HyperliquidDailyOHLC:
             # Add asset column
             df['asset'] = asset
             
+            # Calculate Donchian channels
+            df = self.calculate_donchian_channels(df)
+            
             return df
             
         except Exception as e:
             print(f"Error processing data for {asset}: {e}")
             return pd.DataFrame()
-
-    def sanitize_filename(self, asset: str) -> str:
-        """Sanitize asset name for filename (replace invalid characters)"""
-        # Replace any characters that might cause issues in filenames
-        sanitized = asset.replace("/", "_").replace("\\", "_").replace(":", "_")
-        sanitized = sanitized.replace("<", "_").replace(">", "_").replace("|", "_")
-        sanitized = sanitized.replace("?", "_").replace("*", "_").replace('"', "_")
-        return sanitized
 
     def save_asset_data(self, df: pd.DataFrame, asset: str):
         """Save or update asset data"""
@@ -180,9 +210,7 @@ class HyperliquidDailyOHLC:
             print(f"No data to save for {asset}")
             return
         
-        # Sanitize the asset name for filename
-        safe_asset_name = self.sanitize_filename(asset)
-        asset_file = os.path.join(self.data_dir, f"{safe_asset_name}_daily.csv")
+        asset_file = os.path.join(self.data_dir, f"{asset}_daily.csv")
         
         try:
             if os.path.exists(asset_file) and not self.full_historical:
@@ -190,18 +218,27 @@ class HyperliquidDailyOHLC:
                 existing_df = pd.read_csv(asset_file)
                 existing_df['timestamp'] = pd.to_datetime(existing_df['timestamp'])
                 
-                # Combine and remove duplicates
+                # When combining data, we need to recalculate Donchian channels for the entire dataset
+                # to ensure the rolling calculations are correct
                 combined_df = pd.concat([existing_df, df], ignore_index=True)
                 combined_df = combined_df.drop_duplicates(subset=['timestamp'], keep='last')
                 combined_df = combined_df.sort_values('timestamp')
                 
+                # Drop existing Donchian columns if they exist
+                donchian_cols = [col for col in combined_df.columns if col.startswith('donchian_')]
+                if donchian_cols:
+                    combined_df = combined_df.drop(columns=donchian_cols)
+                
+                # Recalculate Donchian channels for the entire dataset
+                combined_df = self.calculate_donchian_channels(combined_df)
+                
                 # Save combined data
                 combined_df.to_csv(asset_file, index=False)
-                print(f"Updated {asset} ({safe_asset_name}) data: {len(df)} new rows, {len(combined_df)} total rows")
+                print(f"Updated {asset} data: {len(df)} new rows, {len(combined_df)} total rows")
             else:
                 # Save new data
                 df.to_csv(asset_file, index=False)
-                print(f"Saved {asset} ({safe_asset_name}) data: {len(df)} rows")
+                print(f"Saved {asset} data: {len(df)} rows")
                 
         except Exception as e:
             print(f"Error saving data for {asset}: {e}")
@@ -212,7 +249,8 @@ class HyperliquidDailyOHLC:
             assets_data = {
                 "assets": assets,
                 "last_updated": datetime.now(pytz.UTC).isoformat(),
-                "total_assets": len(assets)
+                "total_assets": len(assets),
+                "donchian_periods": self.donchian_periods
             }
             
             with open(self.assets_file, 'w') as f:
@@ -231,7 +269,8 @@ class HyperliquidDailyOHLC:
             "failed_assets": failed_assets,
             "total_successful": len(successful_assets),
             "total_failed": len(failed_assets),
-            "operation_type": "full_historical" if self.full_historical else "daily_update"
+            "operation_type": "full_historical" if self.full_historical else "daily_update",
+            "donchian_periods": self.donchian_periods
         }
         
         summary_file = os.path.join(self.data_dir, "last_run_summary.json")
@@ -247,8 +286,8 @@ class HyperliquidDailyOHLC:
 
     def run(self):
         """Main execution function"""
-        print("Starting Daily OHLC Data Pull")
-        print("=" * 50)
+        print("Starting Daily OHLC Data Pull with Donchian Channels")
+        print("=" * 60)
         
         # Get all assets
         assets = self.get_all_assets()
@@ -274,7 +313,7 @@ class HyperliquidDailyOHLC:
                 raw_data = self.get_historical_ohlc(asset, start_time, end_time)
                 
                 if raw_data:
-                    # Process and save data
+                    # Process and save data (includes Donchian channel calculations)
                     df = self.process_ohlc_data(raw_data, asset)
                     self.save_asset_data(df, asset)
                     successful_assets.append(asset)
@@ -293,10 +332,11 @@ class HyperliquidDailyOHLC:
         # Create summary
         self.create_summary_file(successful_assets, failed_assets)
         
-        print("\n" + "=" * 50)
+        print("\n" + "=" * 60)
         print("Daily OHLC Data Pull Complete")
         print(f"Successful: {len(successful_assets)}")
         print(f"Failed: {len(failed_assets)}")
+        print(f"Donchian periods calculated: {self.donchian_periods}")
 
 if __name__ == "__main__":
     puller = HyperliquidDailyOHLC()
