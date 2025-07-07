@@ -201,6 +201,17 @@
     "RESOLV",
     "SYRUP"
   ],
-  "last_updated": "2025-07-07T02:56:25.516645+00:00",
-  "total_assets": 200
+  "last_updated": "2025-07-07T22:14:57.743707+00:00",
+  "total_assets": 200,
+  "donchian_periods": [
+    5,
+    10,
+    20,
+    30,
+    60,
+    90,
+    150,
+    250,
+    360
+  ]
 }
