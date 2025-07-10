@@ -126,7 +126,14 @@ class HyperliquidDailyOHLC:
                 if not existing_df.empty and 'timestamp' in existing_df.columns:
                     # Get the last timestamp and add 1 day
                     last_timestamp = pd.to_datetime(existing_df['timestamp'].iloc[-1])
-                    start_time = last_timestamp + timedelta(days=1)
+                    potential_start_time = last_timestamp + timedelta(days=1)
+                    
+                    # Ensure we don't try to fetch future data
+                    if potential_start_time.date() > current_time.date():
+                        print(f"Data for {asset} is up to date (last: {last_timestamp.strftime('%Y-%m-%d')})")
+                        return None, None  # Signal no update needed
+                    
+                    start_time = potential_start_time
                     print(f"Updating {asset} from {start_time.strftime('%Y-%m-%d')}")
                 else:
                     start_time = current_time - timedelta(days=self.days_back)
