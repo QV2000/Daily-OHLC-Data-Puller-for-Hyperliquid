@@ -65,7 +65,7 @@ class HyperliquidDailyOHLC:
     def get_historical_ohlc(self, asset: str, start_time: int, end_time: int) -> List[Dict]:
         """Get historical OHLC data for a specific asset with retry logic"""
         max_retries = 3
-        retry_delay = 1
+        retry_delay = 3  # Increased initial delay
         
         for attempt in range(max_retries):
             try:
@@ -97,7 +97,7 @@ class HyperliquidDailyOHLC:
                 if e.response.status_code == 500 and attempt < max_retries - 1:
                     print(f"Server error for {asset}, retrying in {retry_delay}s (attempt {attempt + 1}/{max_retries})")
                     time.sleep(retry_delay)
-                    retry_delay *= 2  # Exponential backoff
+                    retry_delay *= 2  # Exponential backoff: 3s, 6s, 12s
                     continue
                 else:
                     print(f"HTTP Error fetching OHLC data for {asset}: {e}")
@@ -345,8 +345,9 @@ class HyperliquidDailyOHLC:
                     print(f"No data available for {asset}")
                     failed_assets.append(asset)
                 
-                # Rate limiting - increased delay between requests due to API errors
-                time.sleep(0.5)
+                # Rate limiting - respecting Hyperliquid's 1200 weight/minute limit
+                # candleSnapshot = 20 weight, so max 60 requests/minute = 1 per second
+                time.sleep(1.2)  # Slightly more than 1 second for safety
                 
             except Exception as e:
                 print(f"Error processing {asset}: {e}")
