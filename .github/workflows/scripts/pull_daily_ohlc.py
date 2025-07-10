@@ -110,42 +110,60 @@ class HyperliquidDailyOHLC:
 
     def calculate_time_range(self, asset: str) -> tuple:
         """Calculate the time range for data fetching"""
-        current_time = datetime.now(pytz.UTC)
+        # Always use UTC for consistency
+        current_utc = datetime.now(pytz.UTC)
+        
+        # For daily OHLC, use end of previous day to avoid partial day issues
+        # If it's early in the day, yesterday's data should be complete
+        current_date = current_utc.date()
+        yesterday = current_date - timedelta(days=1)
+        
+        print(f"Current UTC time: {current_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}")
         
         # Check if we have existing data for this asset
         asset_file = os.path.join(self.data_dir, f"{asset}_daily.csv")
         
         if self.full_historical or not os.path.exists(asset_file):
             # Pull maximum historical data (start from 2 years ago)
-            start_time = current_time - timedelta(days=730)
-            print(f"Pulling historical data for {asset} from {start_time.strftime('%Y-%m-%d')}")
+            start_time = current_utc - timedelta(days=730)
+            end_time = current_utc
+            print(f"Pulling historical data for {asset} from {start_time.strftime('%Y-%m-%d')} to {end_time.strftime('%Y-%m-%d')}")
         else:
             # Load existing data to determine the last date
             try:
                 existing_df = pd.read_csv(asset_file)
                 if not existing_df.empty and 'timestamp' in existing_df.columns:
-                    # Get the last timestamp and add 1 day
+                    # Get the last timestamp
                     last_timestamp = pd.to_datetime(existing_df['timestamp'].iloc[-1])
-                    potential_start_time = last_timestamp + timedelta(days=1)
+                    last_date = last_timestamp.date()
                     
-                    # Ensure we don't try to fetch future data
-                    if potential_start_time.date() > current_time.date():
-                        print(f"Data for {asset} is up to date (last: {last_timestamp.strftime('%Y-%m-%d')})")
+                    print(f"Last data for {asset}: {last_date}")
+                    
+                    # If we already have yesterday's data, check if we need today's
+                    if last_date >= yesterday:
+                        print(f"Data for {asset} is up to date (last: {last_date}, yesterday: {yesterday})")
                         return None, None  # Signal no update needed
                     
-                    start_time = potential_start_time
-                    print(f"Updating {asset} from {start_time.strftime('%Y-%m-%d')}")
+                    # Start from the day after our last data
+                    start_time = datetime.combine(last_date + timedelta(days=1), datetime.min.time())
+                    start_time = pytz.UTC.localize(start_time)
+                    end_time = current_utc
+                    
+                    print(f"Updating {asset} from {start_time.strftime('%Y-%m-%d')} to {end_time.strftime('%Y-%m-%d')}")
                 else:
-                    start_time = current_time - timedelta(days=self.days_back)
+                    start_time = current_utc - timedelta(days=self.days_back)
+                    end_time = current_utc
                     print(f"No valid existing data for {asset}, pulling {self.days_back} days")
             except Exception as e:
                 print(f"Error reading existing data for {asset}: {e}")
-                start_time = current_time - timedelta(days=self.days_back)
+                start_time = current_utc - timedelta(days=self.days_back)
+                end_time = current_utc
         
-        # End time is current time
-        end_time = current_time
+        start_timestamp = int(start_time.timestamp() * 1000)
+        end_timestamp = int(end_time.timestamp() * 1000)
         
-        return int(start_time.timestamp() * 1000), int(end_time.timestamp() * 1000)
+        print(f"API request timestamps: start={start_timestamp}, end={end_timestamp}")
+        return start_timestamp, end_timestamp
 
     def calculate_donchian_channels(self, df: pd.DataFrame) -> pd.DataFrame:
         """Calculate Donchian channels for multiple periods"""
@@ -339,6 +357,12 @@ class HyperliquidDailyOHLC:
             try:
                 # Calculate time range
                 start_time, end_time = self.calculate_time_range(asset)
+                
+                # Skip if no update needed
+                if start_time is None and end_time is None:
+                    print(f"Skipping {asset} - data is up to date")
+                    successful_assets.append(asset)
+                    continue
                 
                 # Get OHLC data
                 raw_data = self.get_historical_ohlc(asset, start_time, end_time)
