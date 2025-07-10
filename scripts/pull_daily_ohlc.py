@@ -139,9 +139,9 @@ class HyperliquidDailyOHLC:
                     
                     print(f"Last data for {asset}: {last_date}")
                     
-                    # If we already have yesterday's data, check if we need today's
-                    if last_date >= yesterday:
-                        print(f"Data for {asset} is up to date (last: {last_date}, yesterday: {yesterday})")
+                    # If we already have data for today, skip
+                    if last_date >= current_date:
+                        print(f"Data for {asset} is up to date (last: {last_date}, current: {current_date})")
                         return None, None  # Signal no update needed
                     
                     # Start from the day after our last data
