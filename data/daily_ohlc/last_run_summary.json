@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-07-10T02:53:45.315851+00:00",
+  "timestamp": "2025-07-11T03:01:34.239696+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -172,7 +172,8 @@
     "NXPC",
     "SOPH",
     "RESOLV",
-    "SYRUP"
+    "SYRUP",
+    "PUMP"
   ],
   "failed_assets": [
     "MATIC",
@@ -204,7 +205,7 @@
     "CATI",
     "JELLY"
   ],
-  "total_successful": 172,
+  "total_successful": 173,
   "total_failed": 28,
   "operation_type": "daily_update",
   "donchian_periods": [

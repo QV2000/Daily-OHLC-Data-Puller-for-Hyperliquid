@@ -199,10 +199,11 @@
     "NXPC",
     "SOPH",
     "RESOLV",
-    "SYRUP"
+    "SYRUP",
+    "PUMP"
   ],
-  "last_updated": "2025-07-10T02:53:06.559657+00:00",
-  "total_assets": 200,
+  "last_updated": "2025-07-11T02:56:49.529637+00:00",
+  "total_assets": 201,
   "donchian_periods": [
     5,
     10,
