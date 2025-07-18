@@ -1,9 +1,8 @@
 name: Daily OHLC Data Pull
-
 on:
   schedule:
-    # Run daily at 18:01 MST (01:01 UTC next day)
-    - cron: '1 1 * * *'
+    # Run daily at 00:05 UTC
+    - cron: '5 0 * * *'
   workflow_dispatch:
     inputs:
       full_historical:
@@ -16,7 +15,6 @@ on:
         required: false
         default: '1'
         type: string
-
 jobs:
   pull-daily-ohlc:
     runs-on: ubuntu-latest
