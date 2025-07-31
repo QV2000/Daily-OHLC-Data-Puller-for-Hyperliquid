@@ -126,7 +126,8 @@ class HyperliquidDailyOHLC:
         if self.full_historical or not os.path.exists(asset_file):
             # Pull maximum historical data (start from 2 years ago)
             start_time = current_utc - timedelta(days=730)
-            end_time = current_utc
+            # CRITICAL FIX: Extend end time to capture full current day
+            end_time = current_utc + timedelta(hours=6)  # Add buffer to capture full day
             print(f"Pulling historical data for {asset} from {start_time.strftime('%Y-%m-%d')} to {end_time.strftime('%Y-%m-%d')}")
         else:
             # Load existing data to determine the last date
@@ -139,25 +140,32 @@ class HyperliquidDailyOHLC:
                     
                     print(f"Last data for {asset}: {last_date}")
                     
-                    # If we already have data for today, skip
-                    if last_date >= current_date:
+                    # CRITICAL FIX: Always update today's data to capture intraday lows/highs
+                    # Don't skip if we have today's data - it might be incomplete
+                    if last_date > current_date:
                         print(f"Data for {asset} is up to date (last: {last_date}, current: {current_date})")
                         return None, None  # Signal no update needed
-                    
-                    # Start from the day after our last data
-                    start_time = datetime.combine(last_date + timedelta(days=1), datetime.min.time())
-                    start_time = pytz.UTC.localize(start_time)
-                    end_time = current_utc
+                    elif last_date == current_date:
+                        print(f"Updating today's data for {asset} to capture latest intraday movements")
+                        # Start from today to refresh today's data
+                        start_time = datetime.combine(current_date, datetime.min.time())
+                        start_time = pytz.UTC.localize(start_time)
+                        end_time = current_utc + timedelta(hours=6)  # Add buffer to capture full day
+                    else:
+                        # Start from the day after our last data
+                        start_time = datetime.combine(last_date + timedelta(days=1), datetime.min.time())
+                        start_time = pytz.UTC.localize(start_time)
+                        end_time = current_utc + timedelta(hours=6)  # Add buffer to capture full day
                     
                     print(f"Updating {asset} from {start_time.strftime('%Y-%m-%d')} to {end_time.strftime('%Y-%m-%d')}")
                 else:
                     start_time = current_utc - timedelta(days=self.days_back)
-                    end_time = current_utc
+                    end_time = current_utc + timedelta(hours=6)  # Add buffer to capture full day
                     print(f"No valid existing data for {asset}, pulling {self.days_back} days")
             except Exception as e:
                 print(f"Error reading existing data for {asset}: {e}")
                 start_time = current_utc - timedelta(days=self.days_back)
-                end_time = current_utc
+                end_time = current_utc + timedelta(hours=6)  # Add buffer to capture full day
         
         start_timestamp = int(start_time.timestamp() * 1000)
         end_timestamp = int(end_time.timestamp() * 1000)
