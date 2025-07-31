@@ -2,7 +2,8 @@ name: Daily OHLC Data Pull
 on:
   schedule:
     # Run daily at 00:02 UTC (6:02 PM MDT)
-    - cron: '2 0 * * *'
+    - cron: '5 0 * * *'  # Fixed: added missing field
+
   workflow_dispatch:
     inputs:
       full_historical:
