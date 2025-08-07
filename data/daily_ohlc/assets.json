@@ -200,10 +200,11 @@
     "SOPH",
     "RESOLV",
     "SYRUP",
-    "PUMP"
+    "PUMP",
+    "PROVE"
   ],
-  "last_updated": "2025-08-06T02:27:39.458809+00:00",
-  "total_assets": 201,
+  "last_updated": "2025-08-07T02:27:50.810009+00:00",
+  "total_assets": 202,
   "donchian_periods": [
     5,
     10,
