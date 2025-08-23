@@ -202,10 +202,11 @@
     "SYRUP",
     "PUMP",
     "PROVE",
-    "YZY"
+    "YZY",
+    "XPL"
   ],
-  "last_updated": "2025-08-22T02:02:22.216954+00:00",
-  "total_assets": 203,
+  "last_updated": "2025-08-23T01:58:01.533136+00:00",
+  "total_assets": 204,
   "donchian_periods": [
     5,
     10,
