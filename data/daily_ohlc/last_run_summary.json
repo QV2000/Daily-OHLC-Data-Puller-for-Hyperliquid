@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-23T02:02:55.178378+00:00",
+  "timestamp": "2025-08-24T02:23:53.497932+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -148,7 +148,6 @@
     "MELANIA",
     "ANIME",
     "VINE",
-    "VVV",
     "BERA",
     "TST",
     "LAYER",
@@ -172,7 +171,8 @@
     "PUMP",
     "PROVE",
     "YZY",
-    "XPL"
+    "XPL",
+    "WLFI"
   ],
   "failed_assets": [
     "MATIC",
@@ -206,10 +206,11 @@
     "LISTA",
     "kDOGS",
     "CATI",
+    "VVV",
     "JELLY"
   ],
   "total_successful": 172,
-  "total_failed": 32,
+  "total_failed": 33,
   "operation_type": "daily_update",
   "donchian_periods": [
     5,

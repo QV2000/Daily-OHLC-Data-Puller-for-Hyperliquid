@@ -203,10 +203,11 @@
     "PUMP",
     "PROVE",
     "YZY",
-    "XPL"
+    "XPL",
+    "WLFI"
   ],
-  "last_updated": "2025-08-23T01:58:01.533136+00:00",
-  "total_assets": 204,
+  "last_updated": "2025-08-24T02:19:06.387429+00:00",
+  "total_assets": 205,
   "donchian_periods": [
     5,
     10,
