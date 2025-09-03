@@ -1,3 +1,4 @@
 t,timestamp,s,i,open,close,high,low,volume,n,asset,donchian_high_5,donchian_low_5,donchian_mid_5,donchian_high_10,donchian_low_10,donchian_mid_10,donchian_high_20,donchian_low_20,donchian_mid_20,donchian_high_30,donchian_low_30,donchian_mid_30,donchian_high_60,donchian_low_60,donchian_mid_60,donchian_high_90,donchian_low_90,donchian_mid_90,donchian_high_150,donchian_low_150,donchian_mid_150,donchian_high_250,donchian_low_250,donchian_mid_250,donchian_high_360,donchian_low_360,donchian_mid_360
 1756684800000,2025-09-01 23:59:59.999,LINEA,1d,0.059604,0.043102,0.059604,0.039275,180999085.0,22206,LINEA,,,,,,,,,,,,,,,,,,,,,,,,,,,
 1756771200000,2025-09-02 23:59:59.999,LINEA,1d,0.042899,0.042923,0.044479,0.04205,3621539.0,941,LINEA,,,,,,,,,,,,,,,,,,,,,,,,,,,
+1756857600000,2025-09-03 23:59:59.999,LINEA,1d,0.035805,0.036287,0.036528,0.035,3455520.0,649,LINEA,,,,,,,,,,,,,,,,,,,,,,,,,,,
