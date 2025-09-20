@@ -206,10 +206,11 @@
     "XPL",
     "WLFI",
     "LINEA",
-    "SKY"
+    "SKY",
+    "ASTER"
   ],
-  "last_updated": "2025-09-19T01:57:09.682909+00:00",
-  "total_assets": 207,
+  "last_updated": "2025-09-20T01:51:45.522199+00:00",
+  "total_assets": 208,
   "donchian_periods": [
     5,
     10,
