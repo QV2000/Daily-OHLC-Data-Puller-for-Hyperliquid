@@ -208,10 +208,12 @@
     "LINEA",
     "SKY",
     "ASTER",
-    "AVNT"
+    "AVNT",
+    "STBL",
+    "0G"
   ],
-  "last_updated": "2025-09-22T02:04:59.720004+00:00",
-  "total_assets": 209,
+  "last_updated": "2025-09-23T01:54:25.738491+00:00",
+  "total_assets": 211,
   "donchian_periods": [
     5,
     10,
