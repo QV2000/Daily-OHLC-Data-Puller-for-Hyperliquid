@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-27T01:56:25.216389+00:00",
+  "timestamp": "2025-09-28T02:10:40.185106+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -177,7 +177,8 @@
     "AVNT",
     "STBL",
     "0G",
-    "HEMI"
+    "HEMI",
+    "APEX"
   ],
   "failed_assets": [
     "MATIC",
@@ -216,7 +217,7 @@
     "NEIROETH",
     "JELLY"
   ],
-  "total_successful": 177,
+  "total_successful": 178,
   "total_failed": 35,
   "operation_type": "daily_update",
   "donchian_periods": [
