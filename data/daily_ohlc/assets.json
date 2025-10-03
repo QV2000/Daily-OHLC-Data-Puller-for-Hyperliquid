@@ -212,10 +212,12 @@
     "STBL",
     "0G",
     "HEMI",
-    "APEX"
+    "APEX",
+    "2Z",
+    "ZEC"
   ],
-  "last_updated": "2025-10-02T01:54:26.009632+00:00",
-  "total_assets": 213,
+  "last_updated": "2025-10-03T01:54:04.738323+00:00",
+  "total_assets": 215,
   "donchian_periods": [
     5,
     10,
