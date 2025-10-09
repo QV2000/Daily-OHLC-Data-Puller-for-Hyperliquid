@@ -214,10 +214,11 @@
     "HEMI",
     "APEX",
     "2Z",
-    "ZEC"
+    "ZEC",
+    "MON"
   ],
-  "last_updated": "2025-10-08T01:54:50.257248+00:00",
-  "total_assets": 215,
+  "last_updated": "2025-10-09T01:55:54.983451+00:00",
+  "total_assets": 216,
   "donchian_periods": [
     5,
     10,
