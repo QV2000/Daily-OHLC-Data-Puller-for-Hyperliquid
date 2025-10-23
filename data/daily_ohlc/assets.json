@@ -216,10 +216,11 @@
     "2Z",
     "ZEC",
     "MON",
-    "MET"
+    "MET",
+    "MEGA"
   ],
-  "last_updated": "2025-10-22T02:03:53.924673+00:00",
-  "total_assets": 217,
+  "last_updated": "2025-10-23T01:59:22.855999+00:00",
+  "total_assets": 218,
   "donchian_periods": [
     5,
     10,
