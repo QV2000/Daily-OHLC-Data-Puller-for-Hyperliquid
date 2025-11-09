@@ -218,10 +218,11 @@
     "MON",
     "MET",
     "MEGA",
-    "CC"
+    "CC",
+    "ICP"
   ],
-  "last_updated": "2025-11-08T01:57:04.520351+00:00",
-  "total_assets": 219,
+  "last_updated": "2025-11-09T02:08:19.432627+00:00",
+  "total_assets": 220,
   "donchian_periods": [
     5,
     10,
