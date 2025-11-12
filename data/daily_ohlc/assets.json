@@ -219,10 +219,11 @@
     "MET",
     "MEGA",
     "CC",
-    "ICP"
+    "ICP",
+    "AERO"
   ],
-  "last_updated": "2025-11-11T02:05:50.319657+00:00",
-  "total_assets": 220,
+  "last_updated": "2025-11-12T02:04:41.394335+00:00",
+  "total_assets": 221,
   "donchian_periods": [
     5,
     10,
