@@ -220,10 +220,11 @@
     "MEGA",
     "CC",
     "ICP",
-    "AERO"
+    "AERO",
+    "STABLE"
   ],
-  "last_updated": "2025-12-08T02:10:12.972398+00:00",
-  "total_assets": 221,
+  "last_updated": "2025-12-09T02:08:54.011632+00:00",
+  "total_assets": 222,
   "donchian_periods": [
     5,
     10,
