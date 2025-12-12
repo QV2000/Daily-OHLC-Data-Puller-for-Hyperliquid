@@ -221,10 +221,11 @@
     "CC",
     "ICP",
     "AERO",
-    "STABLE"
+    "STABLE",
+    "FOGO"
   ],
-  "last_updated": "2025-12-11T02:18:25.478482+00:00",
-  "total_assets": 222,
+  "last_updated": "2025-12-12T02:16:24.967748+00:00",
+  "total_assets": 223,
   "donchian_periods": [
     5,
     10,
