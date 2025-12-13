@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-12T02:21:34.669959+00:00",
+  "timestamp": "2025-12-13T02:10:48.838566+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -103,6 +103,7 @@
     "POPCAT",
     "EIGEN",
     "REZ",
+    "NOT",
     "TURBO",
     "BRETT",
     "IO",
@@ -218,7 +219,6 @@
     "AI",
     "MYRO",
     "OMNI",
-    "NOT",
     "LISTA",
     "kDOGS",
     "CATI",
@@ -227,8 +227,8 @@
     "JELLY",
     "LAUNCHCOIN"
   ],
-  "total_successful": 185,
-  "total_failed": 38,
+  "total_successful": 186,
+  "total_failed": 37,
   "operation_type": "daily_update",
   "donchian_periods": [
     5,
