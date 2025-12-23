@@ -222,10 +222,11 @@
     "ICP",
     "AERO",
     "STABLE",
-    "FOGO"
+    "FOGO",
+    "LIT"
   ],
-  "last_updated": "2025-12-22T02:24:10.132919+00:00",
-  "total_assets": 223,
+  "last_updated": "2025-12-23T02:19:15.135480+00:00",
+  "total_assets": 224,
   "donchian_periods": [
     5,
     10,

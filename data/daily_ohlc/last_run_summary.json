@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-22T02:29:24.872078+00:00",
+  "timestamp": "2025-12-23T02:24:28.136307+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -186,7 +186,8 @@
     "ICP",
     "AERO",
     "STABLE",
-    "FOGO"
+    "FOGO",
+    "LIT"
   ],
   "failed_assets": [
     "MATIC",
@@ -227,7 +228,7 @@
     "JELLY",
     "LAUNCHCOIN"
   ],
-  "total_successful": 186,
+  "total_successful": 187,
   "total_failed": 37,
   "operation_type": "daily_update",
   "donchian_periods": [
