@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-06T02:27:09.761817+00:00",
+  "timestamp": "2026-01-07T02:26:57.395935+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -29,7 +29,6 @@
     "AAVE",
     "COMP",
     "WLD",
-    "FXS",
     "YGG",
     "TRX",
     "kSHIB",
@@ -194,6 +193,7 @@
     "RNDR",
     "FTM",
     "MKR",
+    "FXS",
     "HPOS",
     "RLB",
     "UNIBOT",
@@ -228,8 +228,8 @@
     "JELLY",
     "LAUNCHCOIN"
   ],
-  "total_successful": 187,
-  "total_failed": 37,
+  "total_successful": 186,
+  "total_failed": 38,
   "operation_type": "daily_update",
   "donchian_periods": [
     5,
