@@ -224,10 +224,12 @@
     "STABLE",
     "FOGO",
     "LIT",
-    "XMR"
+    "XMR",
+    "AXS",
+    "DASH"
   ],
-  "last_updated": "2026-01-18T02:31:44.662595+00:00",
-  "total_assets": 225,
+  "last_updated": "2026-01-19T02:28:51.425927+00:00",
+  "total_assets": 227,
   "donchian_periods": [
     5,
     10,
