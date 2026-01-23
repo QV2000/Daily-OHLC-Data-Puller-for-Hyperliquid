@@ -226,10 +226,11 @@
     "LIT",
     "XMR",
     "AXS",
-    "DASH"
+    "DASH",
+    "SKR"
   ],
-  "last_updated": "2026-01-22T02:28:20.001872+00:00",
-  "total_assets": 227,
+  "last_updated": "2026-01-23T02:23:58.822597+00:00",
+  "total_assets": 228,
   "donchian_periods": [
     5,
     10,
