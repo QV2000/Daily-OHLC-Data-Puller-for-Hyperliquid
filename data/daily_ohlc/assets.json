@@ -227,10 +227,11 @@
     "XMR",
     "AXS",
     "DASH",
-    "SKR"
+    "SKR",
+    "AZTEC"
   ],
-  "last_updated": "2026-02-12T03:12:52.221067+00:00",
-  "total_assets": 228,
+  "last_updated": "2026-02-13T03:13:57.203056+00:00",
+  "total_assets": 229,
   "donchian_periods": [
     5,
     10,
