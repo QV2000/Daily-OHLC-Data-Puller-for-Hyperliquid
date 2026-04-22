@@ -228,10 +228,11 @@
     "AXS",
     "DASH",
     "SKR",
-    "AZTEC"
+    "AZTEC",
+    "CHIP"
   ],
-  "last_updated": "2026-04-21T03:35:29.227868+00:00",
-  "total_assets": 229,
+  "last_updated": "2026-04-22T03:33:14.500108+00:00",
+  "total_assets": 230,
   "donchian_periods": [
     5,
     10,
