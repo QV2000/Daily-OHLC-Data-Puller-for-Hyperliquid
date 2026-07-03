@@ -229,10 +229,11 @@
     "DASH",
     "SKR",
     "AZTEC",
-    "CHIP"
+    "CHIP",
+    "GRAM"
   ],
-  "last_updated": "2026-07-02T01:14:23.697744+00:00",
-  "total_assets": 230,
+  "last_updated": "2026-07-03T03:59:50.402636+00:00",
+  "total_assets": 231,
   "donchian_periods": [
     5,
     10,
