@@ -230,10 +230,11 @@
     "SKR",
     "AZTEC",
     "CHIP",
-    "GRAM"
+    "GRAM",
+    "CASHCAT"
   ],
-  "last_updated": "2026-07-11T03:30:06.406388+00:00",
-  "total_assets": 231,
+  "last_updated": "2026-07-12T03:41:27.256834+00:00",
+  "total_assets": 232,
   "donchian_periods": [
     5,
     10,
