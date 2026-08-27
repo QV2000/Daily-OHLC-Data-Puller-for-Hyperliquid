@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-26T01:54:20.149256+00:00",
+  "timestamp": "2026-08-27T09:25:49.867548+00:00",
   "successful_assets": [
     "BTC",
     "ETH",
@@ -131,7 +131,6 @@
     "TRUMP",
     "MELANIA",
     "ANIME",
-    "VINE",
     "VVV",
     "BERA",
     "LAYER",
@@ -227,6 +226,7 @@
     "CHILLGUY",
     "AI16Z",
     "ZEREBRO",
+    "VINE",
     "JELLY",
     "TST",
     "IP",
@@ -236,8 +236,8 @@
     "LAUNCHCOIN",
     "YZY"
   ],
-  "total_successful": 177,
-  "total_failed": 55,
+  "total_successful": 176,
+  "total_failed": 56,
   "operation_type": "daily_update",
   "donchian_periods": [
     5,
