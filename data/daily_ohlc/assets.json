@@ -231,10 +231,11 @@
     "AZTEC",
     "CHIP",
     "GRAM",
-    "CASHCAT"
+    "CASHCAT",
+    "PONS"
   ],
-  "last_updated": "2026-08-30T05:09:00.879329+00:00",
-  "total_assets": 232,
+  "last_updated": "2026-08-31T05:16:53.501933+00:00",
+  "total_assets": 233,
   "donchian_periods": [
     5,
     10,
