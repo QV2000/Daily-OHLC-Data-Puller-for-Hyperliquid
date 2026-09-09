@@ -232,10 +232,11 @@
     "CHIP",
     "GRAM",
     "CASHCAT",
-    "PONS"
+    "PONS",
+    "USELESS"
   ],
-  "last_updated": "2026-09-08T04:19:26.703978+00:00",
-  "total_assets": 233,
+  "last_updated": "2026-09-09T04:25:05.573951+00:00",
+  "total_assets": 234,
   "donchian_periods": [
     5,
     10,
