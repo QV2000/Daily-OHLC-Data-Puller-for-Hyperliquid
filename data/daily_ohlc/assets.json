@@ -233,10 +233,11 @@
     "GRAM",
     "CASHCAT",
     "PONS",
-    "USELESS"
+    "USELESS",
+    "XTEN"
   ],
-  "last_updated": "2026-10-27T04:46:38.211061+00:00",
-  "total_assets": 234,
+  "last_updated": "2026-10-28T05:21:03.593677+00:00",
+  "total_assets": 235,
   "donchian_periods": [
     5,
     10,
